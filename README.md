@@ -11,7 +11,6 @@ This project is an eCommerce shopping cart website designed to provide users wit
 - **Shopping Cart Functionality**: Users can add, modify, and remove items from their cart.
 - **Order Processing & Payments**: Secure checkout process with multiple payment options.
 - **Order Tracking**: Users can monitor the status of their orders.
-- **Inventory Management**: Suppliers can update stock levels.
 - **Admin Dashboard**: Admins can manage users, products, and orders.
 
 ### Non-Functional Requirements
