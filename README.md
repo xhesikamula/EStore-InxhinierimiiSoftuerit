@@ -66,8 +66,6 @@ This project is an eCommerce shopping cart website designed to provide users wit
 - **Elma Ejupi**
 - **Xhesika Mula**
 
-## License
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## References
 - [Ecommerce4All](https://ecommerce4all-ks.com/module/regulation/laws/)
