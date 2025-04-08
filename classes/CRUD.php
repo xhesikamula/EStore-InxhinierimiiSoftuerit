@@ -3,6 +3,7 @@
 include 'Database.php';
 
 class CRUD {
+    //kemi perdor mysqli per me e lidh PHP kodin me databazen MySQL ku i kemi t rujtuna produktet
     private $mysqli;
 
     public function __construct() {
