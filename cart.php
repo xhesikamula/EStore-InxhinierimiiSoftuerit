@@ -1,9 +1,6 @@
 <?php
 include('includes/header.php');
 
-// Function to calculate the total price
-
-
 
 if (isset($_GET['action']) && ($_GET['action'] === 'emptycart')) {
     unset($_SESSION['cart']);
