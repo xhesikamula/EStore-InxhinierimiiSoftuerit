@@ -82,9 +82,6 @@
             </div> <!-- ./col -->
             <?php endforeach; ?>
         </div> <!-- ./row -->
-        <div class="text-center mt-5">
-            <a href="shop.php" class="btn btn-sm btn-outline-primary">Shop page &rarr;</a>
-        </div>
     </div>
 </div>
 <?php endif; ?>
