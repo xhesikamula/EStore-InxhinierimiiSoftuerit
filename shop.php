@@ -19,7 +19,7 @@
                 <p><?= count($products) ?> products available</p>
             </div>
             <div>
-                <!-- Search Form -->
+                <!-- Search Form to search for products -->
                 <form action="<?= $_SERVER['PHP_SELF'] ?>" method="GET">
                     <input type="text" name="search" class="form-control" placeholder="Search products..." 
                         value="<?= isset($_GET['search']) ? htmlspecialchars($_GET['search']) : '' ?>">
