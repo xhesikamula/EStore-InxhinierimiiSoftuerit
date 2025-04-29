@@ -2,7 +2,7 @@
 # eCommerce Shopping Cart Website
 
 ## Project Overview
-This project is an eCommerce shopping cart website designed to provide users with a seamless online shopping experience. The platform allows customers to browse and purchase products online, while administrators and suppliers can manage inventory, orders, and user accounts.
+This project is an eCommerce shopping cart website designed to provide users with a seamless online shopping experience. The platform allows customers to browse and purchase products online, while administrators can manage inventory, orders, and user accounts.
 
 ## Features
 ### Functional Requirements
@@ -53,7 +53,6 @@ This project is an eCommerce shopping cart website designed to provide users wit
 ## Usage
 - **Users**: Browse products, add items to the cart, and complete purchases.
 - **Admins**: Manage products, users, and orders from the admin panel.
-- **Suppliers**: Update inventory and stock levels.
 
 ## Diagrams & Documentation
 - **Use Case Diagrams**
