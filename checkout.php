@@ -1,7 +1,6 @@
 <?php
 include('includes/header.php');
 
-
 if (!isset($_SESSION['is_loggedin']) || $_SESSION['is_loggedin'] != 1) {
     die('<div class="container my-4">Please <a href="login.php">login</a> first</div>');
 }
@@ -9,156 +8,110 @@ if (!isset($_SESSION['is_loggedin']) || $_SESSION['is_loggedin'] != 1) {
 $errors = [];
 $totalPrice = calculateTotalPrice($_SESSION['cart']);
 
-if (isset($_POST['checkout_btn'])) {
-    // data
-    $fullname = $_POST['fullname'];
-    $email = $_POST['email'];
-    $phone = $_POST['phone'];
-    $address = $_POST['address'];
-    $notes = $_POST['notes'];
-    $card_number = $_POST['card_number'];
-    $expiry_date = $_POST['expiry_date'];
-    $cvv = $_POST['cvv'];
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['checkout_btn'])) {
+    // Ensure all fields are set to avoid undefined array key warnings
+    $fullname = $_POST['fullname'] ?? '';
+    $email = $_POST['email'] ?? '';
+    $phone = $_POST['phone'] ?? '';
+    $address = $_POST['address'] ?? '';
+    $notes = $_POST['notes'] ?? '';
+    $card_number = $_POST['card_number'] ?? '';
+    $expiry_date = $_POST['expiry_date'] ?? '';
+    $cvv = $_POST['cvv'] ?? '';
 
-    if (empty($fullname)) {
-        $errors[] = 'Fullname is required!';
-    }
-
-    if (empty($email)) {
-        $errors[] = 'Email is required!';
+    // Validation: Ensure required fields are not empty
+    if (empty($fullname) || empty($email) || empty($phone) || empty($address) || empty($card_number) || empty($expiry_date) || empty($cvv)) {
+        $errors[] = 'All fields are required!';
     }
 
-    if (empty($phone)) {
-        $errors[] = 'Phone is required!';
-    }
-
-    if (empty($address)) {
-        $errors[] = 'Address is required!';
-    }
-    if (empty($card_number)) {
-        $errors[] = 'Card number is required!';
-    }
-    if (empty($expiry_date)) {
-        $errors[] = 'Expiry date is required!';
-    }
-    if (empty($cvv)) {
-        $errors[] = 'CVV is required!';
-    }
-    if (count($errors) === 0) {
+    if (empty($errors)) {
         $data = [
             'user_id' => $_SESSION['id'],
-            'customer_data' => ($fullname . "<br />" . $phone . "<br />" . $email . "<br />" . $address),
+            'customer_data' => "$fullname<br />$phone<br />$email<br />$address",
             'notes' => $notes,
             'total' => array_reduce($_SESSION['cart'], function ($sum, $item) {
                 return $sum + ($item['qty'] * $item['price']);
-            })
+            }, 0)
         ];
 
-        // Insert the order data into the 'orders' table
+        // Insert order into database
         if ($crud->create('orders', $data)) {
-            // pivot table: order_product (for each cart product: order_id, product_id)
-            $order_id = $crud -> $_SESSION['id'];// Get the last inserted order ID
+            $order_id = $crud->getLastInsertedId(); // Get last inserted ID properly
 
             foreach ($_SESSION['cart'] as $item) {
                 $crud->create('order_product', ['order_id' => $order_id, 'products_id' => $item['id']]);
             }
-            
-            unset($_SESSION['cart']);
 
+            unset($_SESSION['cart']);
             header('Location: index.php?action=checkout&status=1');
+            exit();
         } else {
-            $errors[] = 'Something went wrong!';
+            $errors[] = 'Something went wrong! Please try again.';
         }
     }
 }
 ?>
 
-<!-- Checkout page -->
+<!-- Checkout Page -->
 <div class="checkout py-5">
     <div class="container">
-        <div class="d-flex justify-content-between">
-            <div>
-                <h2>Buy from the best</h2>
-            </div>
-            <div>
-                <a href="#" class="btn btn-sm btn-outline-danger" onclick="return confirm('Are you sure?')">
-                    Empty cart
-                </a>
-            </div>
-        </div>
-        <div class="my-5">
-            <h4 class="mb-4">
-                Checkout
-            </h4>
-            <div class="checkout-form">
-                <?php if ($errors): ?>
-                    <ul>
-                        <?php foreach ($errors as $error): ?>
-                            <li>
-                                <?= $error ?>
-                            </li>
-                        <?php endforeach; ?>
-                    </ul>
-                <?php endif; ?>
-                <form action="<?= $_SERVER['PHP_SELF'] ?>" method="POST">
-                    <div class="form-group">
-                        <label for="fullname my-2">Fullname</label>
-                        <input type="text" name="fullname" id="fullname" class="form-control" placeholder="Fullname"
-                            required />
-                    </div>
-                    <div class="form-group my-2">
-                        <label for="email">Email</label>
-                        <input type="email" name="email" id="email" class="form-control" placeholder="Email" required />
-                    </div>
-                    <div class="form-group my-2">
-                        <label for="phone">Phone</label>
-                        <input type="text" name="phone" id="phone" class="form-control" placeholder="Phone" required />
-                    </div>
-                    <div class="form-group my-2">
-                        <label for="address">Address</label>
-                        <textarea name="address" id="address" class="form-control" required></textarea>
-                    </div>
-                    <div class="form-group my-2">
-                        <label for="notes">Notes</label>
-                        <textarea name="notes" id="notes" class="form-control"></textarea>
-                    </div>
-                    <!-- Placeholder for credit card payment -->
-                    <div class="form-group my-2">
-                        <label for="card_number">Card Number</label>
-                        <div class="credit-card-input"
-                            style="background-color: #f5f5f5; border-radius: 5px; padding: 10px; display: inline-block;">
-                            <input type="text" name="card_number" id="card_number" class="form-control"
-                                placeholder="#### #### #### ####"
-                                style="border: none; background-color: transparent; font-size: 20px; width: 100%; outline: none;" />
-                        </div>
-                    </div>
+        <h4 class="mb-4">Checkout</h4>
 
-                    <div class="form-row my-2">
-                        <div class="col-md-6">
-                            <label for="expiry_date">Expiry Date</label>
-                            <input type="text" name="expiry_date" id="expiry_date" class="form-control"
-                                placeholder="MM/YY"
-                                style="border: none; background-color: #f5f5f5; border-radius: 5px; padding: 10px; width: 100%; outline: none;" />
-                        </div>
-                        <div class="col-md-6">
-                            <label for="cvv">CVV</label>
-                            <input type="text" name="cvv" id="cvv" class="form-control" placeholder="CVV"
-                                style="border: none; background-color: #f5f5f5; border-radius: 5px; padding: 10px; width: 100%; outline: none;" />
-                        </div>
-                    </div>
+        <?php if (!empty($errors)): ?>
+            <div class="alert alert-danger">
+                <ul>
+                    <?php foreach ($errors as $error): ?>
+                        <li><?= htmlspecialchars($error) ?></li>
+                    <?php endforeach; ?>
+                </ul>
+            </div>
+        <?php endif; ?>
 
-                    <button type="submit" name="checkout_btn" class="btn btn-sm btn-outline-primary">Submit</button>
-                </form>
-                <br>
-                <div>
-                    <form action="charge.php" method="post">
-                        <input type="text" name="amount" value="<?= $totalPrice ?>" readonly />
-                        <input type="submit" name="submit" value="Pay With Paypal">
-                    </form>
+        <form action="<?= htmlspecialchars($_SERVER['PHP_SELF']) ?>" method="POST">
+            <div class="form-group">
+                <label>Fullname:</label>
+                <input type="text" name="fullname" class="form-control" required>
+            </div>
+
+            <div class="form-group">
+                <label>Email:</label>
+                <input type="email" name="email" class="form-control" required>
+            </div>
+
+            <div class="form-group">
+                <label>Phone:</label>
+                <input type="text" name="phone" class="form-control" required>
+            </div>
+
+            <div class="form-group">
+                <label>Address:</label>
+                <textarea name="address" class="form-control" required></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>Notes (Optional):</label>
+                <textarea name="notes" class="form-control"></textarea>
+            </div>
+
+            <!-- Credit Card Details -->
+            <div class="form-group">
+                <label>Card Number:</label>
+                <input type="text" name="card_number" class="form-control" required>
+            </div>
+
+            <div class="form-row">
+                <div class="col-md-6">
+                    <label>Expiry Date:</label>
+                    <input type="text" name="expiry_date" class="form-control" placeholder="MM/YY" required>
                 </div>
-                </br>
+                <div class="col-md-6">
+                    <label>CVV:</label>
+                    <input type="text" name="cvv" class="form-control" required>
+                </div>
             </div>
-        </div> <!-- ./div -->
+
+            <button type="submit" name="checkout_btn" class="btn btn-primary mt-3">Pay with Credit Card</button>
+        </form>
     </div>
 </div>
 
