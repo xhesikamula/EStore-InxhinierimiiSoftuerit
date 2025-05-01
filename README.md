@@ -50,9 +50,10 @@ EStore is a dynamic eCommerce shopping cart application built with PHP and MySQL
 
 
 ## Configuration
-Before running the app, open
-classes/Database.php
-and on the new mysqli(...) line, replace the empty password ('') with your own phpMyAdmin/MySQL password. For example:
+Before running the app,
+open classes/Database.php
+and on the new mysqli(...) line, replace the empty password ('') with your own phpMyAdmin/MySQL password. 
+For example:
 $this->connection = new mysqli('127.0.0.1', 'root', 'YOUR_PMA_PASSWORD', 'estore', 3306);
 Save the file, restart your PHP server if needed, and you’re all set!
 
