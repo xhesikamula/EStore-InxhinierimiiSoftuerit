@@ -1,7 +1,7 @@
 # EStore
 
 ## Project Overview
-This project is an eCommerce shopping cart website designed to provide users with a seamless online shopping experience. The platform allows customers to browse and purchase products online, while administrators can manage inventory, orders, and user accounts.
+EStore is a dynamic eCommerce shopping cart application built with PHP and MySQL. The platform delivers a smooth and intuitive online shopping experience for users, allowing them to browse products, add items to their cart, and complete purchases with ease. On the admin side, it provides robust tools for managing products, orders, inventory, and user accounts — all through a clean and functional interface. This project serves as a practical implementation of core eCommerce features and backend management.
 
 ## Features
 ### Functional Requirements
