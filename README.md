@@ -49,7 +49,7 @@ EStore is a dynamic eCommerce shopping cart application built with PHP and MySQL
    http://localhost:8000
 
 
-⚙️ Configuration
+## Configuration
 Before running the app, open
 classes/Database.php
 and on the new mysqli(...) line, replace the empty password ('') with your own phpMyAdmin/MySQL password. For example:
