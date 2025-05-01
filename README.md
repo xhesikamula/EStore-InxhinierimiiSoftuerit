@@ -48,6 +48,16 @@ This project is an eCommerce shopping cart website designed to provide users wit
 5. Open your browser and go to:
    ```sh
    http://localhost:8000
+
+
+⚙️ Configuration
+Before running the app, open
+classes/Database.php
+and on the new mysqli(...) line, replace the empty password ('') with your own phpMyAdmin/MySQL password. For example:
+$this->connection = new mysqli('127.0.0.1', 'root', 'YOUR_PMA_PASSWORD', 'estore', 3306);
+Save the file, restart your PHP server if needed, and you’re all set!
+
+
    
 
 ## Usage
