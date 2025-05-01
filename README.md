@@ -1,5 +1,5 @@
 # InxhinierimiSoftuerit-eStore
-# eCommerce Shopping Cart Website
+# EStore
 
 ## Project Overview
 This project is an eCommerce shopping cart website designed to provide users with a seamless online shopping experience. The platform allows customers to browse and purchase products online, while administrators can manage inventory, orders, and user accounts.
