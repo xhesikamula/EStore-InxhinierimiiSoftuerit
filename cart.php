@@ -1,31 +1,32 @@
 <?php
 include('includes/header.php');
+require_once 'classes/CartHandler.php';
 
-
-if (isset($_GET['action']) && ($_GET['action'] === 'emptycart')) {
-    unset($_SESSION['cart']);
-    header('Location: index.php');
+if (!isset($_SESSION['cart'])) {
+    $_SESSION['cart'] = [];
 }
 
-if (isset($_GET['action']) && ($_GET['action'] === 'minus')) {
-    $id = $_GET['id'];
-    $cart_product = $_SESSION['cart'][$id];
-    $cart_product['qty'] = $cart_product['qty'] - 1;
+$cartHandler = new CartHandler($_SESSION['cart']);
 
-    if ($cart_product['qty'] <= 0) {
-        unset($_SESSION['cart'][$id]);
-    } else {
-        $_SESSION['cart'][$id] = $cart_product;
+if (isset($_GET['action'])) {
+    $id = $_GET['id'] ?? null;
+
+    if ($_GET['action'] === 'emptycart') {
+        $cartHandler->emptyCart();
+        header('Location: index.php');
     }
-    header('Location: cart.php');
-}
 
-if (isset($_GET['action']) && ($_GET['action'] === 'plus')) {
-    $id = $_GET['id'];
-    $cart_product = $_SESSION['cart'][$id];
-    $cart_product['qty'] = $cart_product['qty'] + 1;
-    $_SESSION['cart'][$id] = $cart_product;
-    header('Location: cart.php');
+    if ($_GET['action'] === 'minus' && $id !== null) {
+        $currentQty = $_SESSION['cart'][$id]['qty'] ?? 0;
+        $cartHandler->updateQuantity($id, $currentQty - 1);
+        header('Location: cart.php');
+    }
+
+    if ($_GET['action'] === 'plus' && $id !== null) {
+        $currentQty = $_SESSION['cart'][$id]['qty'] ?? 0;
+        $cartHandler->updateQuantity($id, $currentQty + 1);
+        header('Location: cart.php');
+    }
 }
 ?>
 
@@ -36,11 +37,7 @@ if (isset($_GET['action']) && ($_GET['action'] === 'plus')) {
             <div>
                 <h2>Cart</h2>
                 <p>
-                    <?php
-                    if (isset($_SESSION['cart'])) {
-                        echo count($_SESSION['cart']) . ' products';
-                    }
-                    ?>
+                    <?= count($_SESSION['cart']) ?> products
                 </p>
             </div>
             <div>
@@ -51,7 +48,7 @@ if (isset($_GET['action']) && ($_GET['action'] === 'plus')) {
             </div>
         </div>
         <div class="my-5">
-            <?php if (isset($_SESSION['cart']) && count($_SESSION['cart'])): ?>
+            <?php if (count($_SESSION['cart'])): ?>
                 <div class="table-responsive">
                     <table class="table table-bordered cart-table">
                         <thead>
@@ -64,18 +61,14 @@ if (isset($_GET['action']) && ($_GET['action'] === 'plus')) {
                         <tbody>
                             <?php foreach ($_SESSION['cart'] as $item): ?>
                                 <tr>
-                                    <td>
-                                        <?= $item['name'] ?>
-                                    </td>
+                                    <td><?= $item['name'] ?></td>
                                     <td>
                                         <div class="quantity-control">
                                             <a href="?action=minus&id=<?= $item['id'] ?>"
-                                                class="btn btn-sm btn-outline-secondary">-</a>
-                                            <span class="quantity">
-                                                <?= $item['qty'] ?>
-                                            </span>
+                                               class="btn btn-sm btn-outline-secondary">-</a>
+                                            <span class="quantity"><?= $item['qty'] ?></span>
                                             <a href="?action=plus&id=<?= $item['id'] ?>"
-                                                class="btn btn-sm btn-outline-secondary">+</a>
+                                               class="btn btn-sm btn-outline-secondary">+</a>
                                         </div>
                                     </td>
                                     <td class="text-end">
@@ -86,7 +79,7 @@ if (isset($_GET['action']) && ($_GET['action'] === 'plus')) {
                             <tr>
                                 <td colspan="2" class="text-start"><strong>Total Price:</strong></td>
                                 <td class="text-end">
-                                    <?= number_format(calculateTotalPrice($_SESSION['cart']), 2, '.', '') ?> &euro;
+                                    <?= number_format($cartHandler->calculateTotal(), 2, '.', '') ?> &euro;
                                 </td>
                             </tr>
                         </tbody>
@@ -97,7 +90,7 @@ if (isset($_GET['action']) && ($_GET['action'] === 'plus')) {
             <?php endif; ?>
         </div>
         <div>
-            <?php if (isset($_SESSION['is_loggedin']) && ($_SESSION['is_loggedin'] == 1)): ?>
+            <?php if (isset($_SESSION['is_loggedin']) && $_SESSION['is_loggedin'] == 1): ?>
                 <a href="checkout.php" class="btn btn-sm btn-outline-primary">Check out</a>
             <?php else: ?>
                 Please <a href="login.php">login</a> first
