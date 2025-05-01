@@ -59,8 +59,6 @@ For example:
 ```php
 $this->connection = new mysqli('127.0.0.1', 'root', 'YOUR_PMA_PASSWORD', 'yourdatabasename', 3306);
 ```
-
-
    
 
 ## Usage
@@ -86,4 +84,17 @@ $this->connection = new mysqli('127.0.0.1', 'root', 'YOUR_PMA_PASSWORD', 'yourda
 ---
 ### Notes
 This project was developed as part of a university assignment for the **Software Engineering** course at the **University of Prishtina, Faculty of Mathematical-Natural Sciences, Department of Computer Science**.
+
+## 💡 Recommendations Are Welcome
+
+We’re always looking to improve **EStore** and make it more useful, secure, and feature-rich.  
+If you have suggestions for enhancements, new features, UI/UX improvements, or optimizations — we'd love to hear them!
+
+Feel free to:
+- Open an [issue](https://github.com/xhesikamula/EStore-InxhinierimiiSoftuerit/issues)
+- Submit a pull request
+- Or contact the contributors directly
+
+Your feedback helps us grow this project into something even better. Thank you!
+
 
