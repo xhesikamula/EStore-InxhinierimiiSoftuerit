@@ -1,4 +1,3 @@
-# InxhinierimiSoftuerit-eStore
 # EStore
 
 ## Project Overview
