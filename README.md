@@ -27,28 +27,28 @@ This project is an eCommerce shopping cart website designed to provide users wit
 - **Database**: mySQL
 - **Version Control**: Git & GitHub
 
-## Installation & Setup
-1. Clone the repository:
+## 🚀 Installation & Setup
+
+1. **Clone the repository**  
    ```sh
-   git clone https://github.com/your-username/ecommerce-shopping.git
+   git clone https://github.com/xhesikamula/EStore-InxhinierimiiSoftuerit.git
    ```
 2. Navigate to the project directory:
    ```sh
-   cd ecommerce-shopping
+   cd EStore-InxhinierimiiSoftuerit
    ```
-3. Install dependencies:
+3. Install PHP dependencies
    ```sh
-   pip install -r requirements.txt
+   composer install
    ```
-4. Set up the database:
+4. Start the built-in PHP server
    ```sh
-   python manage.py migrate
+   php -S localhost:8000
    ```
-5. Run the development server:
+5. Open your browser and go to:
    ```sh
-   python manage.py runserver
-   ```
-6. Open your browser and go to `http://127.0.0.1:8000/`
+   http://localhost:8000
+   
 
 ## Usage
 - **Users**: Browse products, add items to the cart, and complete purchases.
