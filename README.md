@@ -57,7 +57,7 @@ and on the `new mysqli(...)` line, replace the empty password `('')` with your o
 
 For example:  
 ```php
-$this->connection = new mysqli('127.0.0.1', 'root', 'YOUR_PMA_PASSWORD', 'estore', 3306);
+$this->connection = new mysqli('127.0.0.1', 'root', 'YOUR_PMA_PASSWORD', 'estore', 3306); ```
 
 
    
