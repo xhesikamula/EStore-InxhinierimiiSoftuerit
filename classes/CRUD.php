@@ -11,49 +11,36 @@ class CRUD {
     }
 
     public function create($table, $data) {
-        $sql = "INSERT INTO `" . $table . "` SET ";
+        $columns = implode("`, `", array_keys($data));
+        $values = implode("', '", array_map([$this->mysqli, 'real_escape_string'], array_values($data)));
 
-        
-        if(count($data)) {
-            $count = 1;
-
-            foreach($data as $column => $value) {
-                if(count($data) > $count) {
-                    $sql .= "`".$column."`='".$this->mysqli->real_escape_string($value)."', ";
-                } else {
-                    $sql .= "`".$column."`='".$this->mysqli->real_escape_string($value)."'";
-                }
-
-                $count++;
-            }
-        }
+        $sql = "INSERT INTO `$table` (`$columns`) VALUES ('$values')";
 
         return $this->mysqli->query($sql) ? true : $this->mysqli->error;
     }
     
     public function read($table, $condition = [], $limit = null, $order = []) {
-        $sql = "SELECT * FROM `".$table."`";
+        $sql = "SELECT * FROM `$table`";
         $items = [];
 
-        if(count($condition)) {
-            $sql .= " WHERE `".$condition['column']."`='".$condition['value']."'";
+        if (count($condition)) {
+            $column = $condition['column'];
+            $value = $this->mysqli->real_escape_string($condition['value']);
+            $sql .= " WHERE `$column` = '$value'";
         }
 
-        if(count($order) == 2) {
-            $sql .= " ORDER BY " .$order['column'] ." " .$order['order'];
-        }
-        
-        if(!is_null($limit)) {
-            $sql .= " LIMIT " .$limit;
+        if (count($order) == 2) {
+            $sql .= " ORDER BY `" . $order['column'] . "` " . $order['order'];
         }
 
-        if($query = $this->mysqli->query($sql)) {
-            if($query->num_rows > 0) {
-                while($row = $query->fetch_assoc()) {
-                    $items[] = $row;
-                }
+        if (!is_null($limit)) {
+            $sql .= " LIMIT " . (int) $limit;
+        }
+
+        if ($query = $this->mysqli->query($sql)) {
+            while ($row = $query->fetch_assoc()) {
+                $items[] = $row;
             }
-
             return $items;
         } else {
             return $this->mysqli->error;
@@ -61,58 +48,54 @@ class CRUD {
     }
 
     public function update($table, $data, $condition = []) {
-        $sql = "UPDATE `".$table."` SET ";
+        $sql = "UPDATE `$table` SET ";
 
-        if(count($data)) {
-            $count = 1;
-
-            foreach($data as $column => $value) {
-                if(count($data) > $count) {
-                    $sql .= "`".$column."`='".$this->mysqli->real_escape_string($value)."', ";
-                } else {
-                    $sql .= "`".$column."`='".$this->mysqli->real_escape_string($value)."'";
-                }
-
-                $count++;
-            }
+        $updates = [];
+        foreach ($data as $column => $value) {
+            $updates[] = "`$column` = '" . $this->mysqli->real_escape_string($value) . "'";
         }
+        $sql .= implode(", ", $updates);
 
-        if(count($condition)) {
-            $sql .= " WHERE `".$condition['column']."`='".$condition['value']."'";
+        if (count($condition)) {
+            $column = $condition['column'];
+            $value = $this->mysqli->real_escape_string($condition['value']);
+            $sql .= " WHERE `$column` = '$value'";
         }
 
         return $this->mysqli->query($sql) ? true : $this->mysqli->error;
     }
 
     public function delete($table, $condition = [], $limit = null) {
-        $sql = "DELETE FROM `".$table."`";
-        $items = [];
+        $sql = "DELETE FROM `$table`";
 
-        if(count($condition)) {
-            $sql .= " WHERE `".$condition['column']."`='".$condition['value']."'";
+        if (count($condition)) {
+            $column = $condition['column'];
+            $value = $this->mysqli->real_escape_string($condition['value']);
+            $sql .= " WHERE `$column` = '$value'";
         }
 
-        if(!is_null($limit)) {
-            $sql .= " LIMIT " .$limit;
+        if (!is_null($limit)) {
+            $sql .= " LIMIT " . (int) $limit;
         }
 
         return $this->mysqli->query($sql) ? true : $this->mysqli->error;
     }
 
     public function search($table, $column, $value) {
-        $sql = "SELECT * FROM `".$table."` WHERE `".$column."` LIKE '%".$value."%'";
+        $sql = "SELECT * FROM `$table` WHERE `$column` LIKE '%" . $this->mysqli->real_escape_string($value) . "%'";
         $items = [];
 
-        if($query = $this->mysqli->query($sql)) {
-            if($query->num_rows > 0) {
-                while($row = $query->fetch_assoc()) {
-                    $items[] = $row;
-                }
+        if ($query = $this->mysqli->query($sql)) {
+            while ($row = $query->fetch_assoc()) {
+                $items[] = $row;
             }
-
             return $items;
         } else {
             return $this->mysqli->error;
         }
     }
+    public function getLastInsertedId() {
+    return $this->mysqli->insert_id;
+}
+
 }
