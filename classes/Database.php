@@ -1,11 +1,12 @@
 <?php
 
+
 class Database {
     private static $instance = null;
     private $connection = null;
 
     public function __construct() {
-        $this->connection = new mysqli('localhost', 'root', 'newpassword', 'estore', 3306); 
+        $this->connection = new mysqli('localhost', 'root', 'YOURPASSWORD', 'DATABASENAME', 3306); 
     }
 
     public static function getInstance() {
@@ -20,3 +21,4 @@ class Database {
         return $this->connection;
     }
 }
+
